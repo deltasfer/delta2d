@@ -2,6 +2,8 @@
 
 
 
+
+
 dic = {} ## dic regroupant des caractéristiques de chaque espèce (skin seq etc) afin que ça soa pratik qoa
 
 
@@ -68,6 +70,9 @@ if True:
             }
 
 dic['human'] = dic2
+
+
+
 
 
 

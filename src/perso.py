@@ -3,6 +3,8 @@
 
 
 
+
+
 import random
 from src import tile_utils as tut
 from src import positions as pup
@@ -762,3 +764,6 @@ class LivingBot(Living):
                     self.move(dir)
 
         #self.labman.add(self.name+' acting : ',self.current_action)
+
+
+

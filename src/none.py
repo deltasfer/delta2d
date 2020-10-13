@@ -7,6 +7,8 @@
 
 
 
+
+
 self.goodkeys = {key.SPACE : ' ',key.EXCLAMATION : '!',key.DOUBLEQUOTE : '\"',key.HASH : "#"
                 ,key.POUND : '£',key.DOLLAR : '$',key.PERCENT : '%',key.AMPERSAND : '*'
                 ,key.APOSTROPHE : '\'',key.PARENLEFT : '(',key.PARENRIGHT : ')',key.ASTERISK : '*'
@@ -18,6 +20,9 @@ self.goodkeys = {key.SPACE : ' ',key.EXCLAMATION : '!',key.DOUBLEQUOTE : '\"',ke
                 ,key.J : 'j',key.K : 'k',key.L : 'l',key.M : 'm',key.N : 'n',key.O : 'o',key.P : 'p',key.Q : 'q',key.R : 'r',key.S : 's'
                 ,key.T : 't',key.U : 'u',key.V : 'v',key.W : 'w',key.X : 'x',key.Y : 'y',key.Z : 'z',key.BRACELEFT : '{',key.BAR : '|'
                 ,key.BRACERIGHT : '}',key.ASCIITILDE : '*'}
+
+
+
 
 
 

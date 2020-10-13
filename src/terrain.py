@@ -4,6 +4,8 @@
 
 
 
+
+
 import pyglet,random
 from src import utils
 import src.tile_utils as tut
@@ -104,6 +106,9 @@ def emptyBiom(biom):
     tab = [[x]*biom[1]]
     eB = Biom(tab*tut.DEPTH_BIOM)
     return eB
+
+
+
 
 
 

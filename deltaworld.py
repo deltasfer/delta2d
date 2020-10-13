@@ -1,5 +1,7 @@
 
 
+
+
 #newversion
 
 
@@ -14,6 +16,7 @@ from src.utils import *
 from src import tile_utils as tut
 from src import positions as pup
 from src import perso as pso
+from src import getsave as gs
 
 
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__)) # fopatouché
@@ -329,7 +332,7 @@ class App(pyglet.window.Window):
                                                             20,'chargement_desc')
 
 
-        v = get_version(self.path)
+        v = gs.get_version(self.path)
         text = '__ DELTAWORLD version  '+ v + ' __'
 
         self.sprids['menu']['description'] = self.specMan.addLabel(text.upper(),
@@ -2639,7 +2642,7 @@ class App(pyglet.window.Window):
 
         else:
             print('\n\nNumber of lines :',compt(self.path))
-            save_files(self.path)
+            gs.save_files(self.path)
 
             self.close()
 
@@ -2650,3 +2653,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+

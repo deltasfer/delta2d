@@ -2,6 +2,8 @@
 
 
 
+
+
 import random,os,ctypes,time
 from ctypes import windll, Structure, c_long, byref
 from math import *
@@ -137,7 +139,7 @@ def truncate(f, n=3):
     return '.'.join([i, (d+'0'*n)[:n]])
 
 ### PARTIE AUTO-SAUVEGARDE
-
+"""
 def save_files(bigpath,path = ['/.','/src'],save_path = '/autosav/'):
 
     autosav = ''
@@ -174,6 +176,8 @@ def save_files(bigpath,path = ['/.','/src'],save_path = '/autosav/'):
     print('files saved, version',version[0]+'_'+str(version[1])[0]+'_'+str(version[1])[-4:])
 
 def recup_files(path2):
+
+    ##version obsolete de getback ?
 
     currentpath = path2.split('\\')[-1]
     currentpath = currentpath.split('/')[-1]
@@ -229,7 +233,7 @@ def get_version(bigpath,save_path = '/autosav/'):
     except:
         a=0
     return version[0]+'_'+str(version[1])[0]+'_'+str(version[1])[-4:]
-
+"""
 def compt(bigpath,path = ['/.','/src']):
 
     long = 0

@@ -2,6 +2,8 @@
 
 
 
+
+
 import pyglet
 from src import utils
 import src.tile_utils as tut
@@ -637,6 +639,9 @@ class Cursor():
 
     def is_visible(self):
         return self.manager.sprites[self.id].visible
+
+
+
 
 
 
