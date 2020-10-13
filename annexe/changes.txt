@@ -1,0 +1,131 @@
+DELTA2D INFOS FICHIERS SAUVEGARDES CODE
+
+différentes version:
+
+alpha 1.0338 :
+fichier de récupération du code getback.py fonctionnel (par contre y’a eu de la modification dans les images du dossier item/ donc c la merde, cette version n’est pas vraiment fonctionnelle à l’heure où je parle (alpha 1.1712))
+
+alpha 1.1712:
+-Possibilité de se déplacer dans la map
+-création/chargement/sauvegardes des maps dans le dossier saves/ (sauvegarde de map contient fichier perso,fichier land, fichier minimap)
+-ajout du quickplay
+-mise à jour de la fonction reset_biom() je crois c’est tout bien fonctionnel
+-mise en place des fonctions pour le hud vitaif (rien n’est abouti)
+-création des lands avec un système de seed beaucoup plus naturel que l’ancienne version, existence d’arbres, arbustes, pierres, cailloux, planches de bois, palettes, différentes branches de bois dans les forêts
+-F11 lance le plein écran sur l’écran en cours, pas encore de resize de tous les boutons etc, ni ingame de la partie de l’écran où lorsque le perso va dedans ça bouge la caméra
+-les différentes parties s’affichent dans l’ordre du plan récent jsuqu’à la plus vieille, boutons de défilement si il y a plus de 5 parties
+-Possibilité de casser les blocks, ce qui les récupère dans l’inventaire, et puis possibilité de les reposer après
+-selection sur la land, dans l’inventaire (juste la barre du bas avec la molette)
+-affichage ou non de l’inventaire, affichage ou non de la map
+-perso a une vie et un max de vie
+
+alpha 1.1734:
+3s total time lancement hehe
+-Ajout du fichier ‘positions.py’ (as pup) qui regroupera les positions et tailles relatives des différents éléments de la fenetre (boutons du menu, hud) afin de ne pas que ça soit le sbeul quand tu change d’écran.
+-barre de vie plus ou moins fonctionnelle
+
+alpha 1.1757:
+3s total time lancement hehe
+-Réglage d’un bug si jamais il y avait un espace dans le chemin d'accès. Bon si il y en a encore un ça ne marche toujours pas mais au moins ça affiche que ya un putain d’espace et donc ça affiche de changer d’endroit sur le disque
+-LabelManager devient CmdManager car ça me sert plus de cmd qu’autre chose et permet d’avoir un nouveau LabelManager qui gère les labels devant toujours être affichés à l’écran (les noms du joueur, le nom du joueur principal dans le hud,...). Création de ce nouveau LabelManager donc.
+-GROS CHANGEMENT : remodelage de l’utilisation des groupes dans graphic.py, à présent la classe GroupManager gérera les groupes afin de pouvoir afficher non seulement les sprites contrôlés par GraphManager mais aussi les labels du nouveau LabelManager. du coup j’ai du changer pas mal GraphManager et EffectManager, entrainant une prise de conscience de l’inutilité de egroup et addEGroup() (groupes spécifiques aux effets) donc maintenant y’a qu’un seul type de groupe qui gère tout.
+-ajout de la fonction adelife() dans Perso qui permet d’ajouter ou d’enlever de la vie sans dépasser perso.max_life, barre de vie fonctionnelle.
+
+alpha 1.1782:
+-Implémentation presque complète du nouveau LabelManager, tests en affichant le nom du perso dans le hud. Problème : bug dans pyglet, changer le group d’un label après son instanciation ne fonctionne pas, donc fonction addToGroup() inutilisable pour l’instant.
+
+alpha 1.1829:
+-Réglage de la fonction addToGroup() de LabelManager, il manquait de rappeler la fonction label._update() après changement du groupe
+-Nom du perso bien affiché dans le hud
+-mise en place des fonctions .delete() de LabelManager et GraphManager, pour delete les sprites/labels concernés. Marche parfaitement pour les labels, mais montre un bug lors du deleting de certains sprites. lorsqu’on appelle self.sprites[id].delete() ça nous donne une erreur :
+“File "C:\Users\delta\AppData\Roaming\Python\Python36\site-packages\pyglet\sprite.py", line 263, in delete
+    self._vertex_list.delete()
+AttributeError: 'NoneType' object has no attribute 'delete'
+Après de nombreuses recherches j’ai trouvé ça:
+	-self.sprites[id].delete() est bien un sprite pour tout id in self.sprites
+	-les id concernées ne sont nulle part dans self.sprids donc ne sont pas créé dans 	deltaworld.py
+	-_vertex_list = None parfois dans la déclaration d’un sprite, peut-être une mauvaise 	mise en place du batch ou d’un groupe
+Du coup j’ai juste mis un try pour éviter l’erreur et ça fonctionne bien sans mais c’est pas très propre oups. Bon pour le moment j’ai vu aucune répercussion niveau graphique/performances, donc nsm go etre un schlag
+Autres pistes:
+	-ça a l’air d’etre dû à la suppression des sprites de selection (cursors) notamment dans l’inventaire et sur le terrain.
+
+alpha 1.1856:
+-Résolution du problème : le problème était dû à .delete() sur un sprite qui en avait déjà subi un sans être supprimé de self.sprites. C’est maintenant chose faite. Pour éviter ça, il faut appeler self.graphic.delete(tabids) pour delete des sprites et NE JAMAIS appeler directement self.graphic.sprites[id].delete() ce qui NE SUPPRIME PAS id de self.graphic.sprites, ce qui nous fait donc stocker des sprites vides inutiles
+-amélioration possible : ne pas recréer un cursor à chaque mouvement de souris !! réutiliser le même et créer une classe MultipleCursor pour un cursor ayant besoin d’afficher plusieurs sprites à la fois
+-Refonte de la sauvegarde des données du personnage : ajout de la vie et du nom, transformation de tab_perso en dictionnaire (beaucoup plus simple à organiser) : du coup les anciennes map ne chargeront pas sauf si on y intègre le fichier perso clean. Cependant à présent la partie sauvegarde le nom du perso et sa vie/max_vie
+
+alpha 1.1885:
+-Optimisation de la perte de fps dans les menus lors de la présence de nombreux boutons et du mouvement de la souris, à l’aide d’un nouvel algorithme tut.colli_ABP_mult() qui optimise presque au max je dirais la recherche de si la souris se trouve dans une des boites.
+-fps_label supprimé et l’affichage des fps est à présent régi via LabelManager()
+-affichage des OrderedGroupe réorganisé afin d’afficher les groupes par ordre descendant
+
+alpha 1.1935: (version non fonctionnelle)
+-Repérage et résolution d’un problème des fonctions delete() de LabelManager et GraphManager (lorsqu’on mettait un dico ça faisait de la merde,maintenant c réglé), amélioration de ladite fonction, à l’aide de la récursivité (héhé jem)
+-ajout du level dans la sauvegarde des persos (oubli des versions précédentes qui est maintenant réglé)
+-Attention GROS BUG:
+	afin de créer un bot qui m’accompagne j’ai pas mal changé perso.py, notamment en créant tout d’abord Living() classe mère de Perso(), cf Précisions mob, et en faisant cela mon perso ne bougeait plus lors du pressage de ZQSD. En me penchant de plus près, le problème vient du fait que la fonction cherchant les collisions du perso ne récupère pas les bonnes valeurs des tiles situées un level en dessous du mien : à résoudre.
+De plus, j’ai remarqué que, dans les anciennes versions (1.1885), le level du perso de base était 0 pourtant on arrivait à se déplacer. Est-ce le niveau normal ? Le niveau 0 n’est pas censé être le niveau du sol donc on marcherait DANS la dirt ? et quid du contact avec les arbres alors (qui sont au niveau 1) ?
+
+alpha 1.1938:
+-Solution du problème: il y avait dans les anciennes versions un self.level défini à part de la self.bcx_pos, ce qui pose problème dans la nouvelle version, donc hop on tej self.level et c tout bon, de plus le main problème se trouvait dans la fonction get_case(pos,lvl=0) qui prenait le lvl de pos seulement si lvl == 0, donc on ne pouvait jamais obtenir la case = 0, c’est maintenant tout bon vu que j’ai changé en get_case(pos,lvl=None) qui prend en compte le lvl de pos seulement si lvl == None !
+
+alpha 1.1943:
+-Grosse improve de la sauvegard / load/ create du fichier perso: sauvegarde maintenant l’espèce, le nom, la vie, si c’est le perso principal ou pas, le type (Perso ou Living), l’inventaire si c’est un Perso, le skin_seq et la position.
+-Les persos sont appelés avec une id à présent, self.perso != self.persos[self.perso].name afin de pouvoir avoir 2 persos sur la map avec le même nom.
+
+alpha 1.1954:
+-création de la 1e loutre lors de la création d’un terrain ! bon elle est juste créée pour le moment elle ne bouge paas
+-affichage des nametags des différents persos au dessus des têtes -> la 1e loutre s’appelle Legend, un signe du destin ???
+
+alpha 1.1966:
+-Début de la refonte de refresh_graphic() en refresh() : à présent on a un refresh_persos() qui est appelée directement depuis refresh() et qui permet une seule et unique recherche de position de chaque joueur par tour. Suppression de refresh_general(), le hud est actualisé via actualise_hud() appelé depuis refresh_persos() et les nametags sont refresh directement dans refresh_persos()
+-mise en place de la variable globale CMD dans perso.py afin de pouvoir afficher la collbox aisément
+
+alpha 1.1981:
+-mise en place d’un système d’actions plus ou moins aléatoire dans le comportement des loutres : pour le moment elles peuvent juste choisir une destination, bouger en direction de cette destination ou aléatoirement, sleep ou ne rien faire
+-création de “skills” spécifiques à chaque personnage (définis en fonction de ton espèce + tes propres skills), permettant par exemple de savoir si tu peux te déplacer sur ou à travers une certaine tile (exemple : les loutres peuvent nager, elles peuvent donc aller sur l’eau et à travers l’eau, ce qui n’est pas le cas de l’humain tant qu’il a pas appris à nager.)(autre exemple : les oiseaux pourront voler, donc “marcher” sur une case vide)
+-l’algorithme qui décide si tu peux bouger se base donc sur les dico self.WALKON et self.WALKTRGH au lieu de ceux de TerrainCreator.py
+-ajout de la possibilité de creer une map 1x1
+-résolution du problème de non updating du skin des bots, l’update des skins se faisaient via events() donc seulement quand le perso principal bougeait, maintenant j’ai tout balancé dans refresh_persos() à l’ancienne ta capté
+-test avec 1000 loutres dans un biom(un chunk de 32x32 tiles) : on ne dépasse pas les 2 fps, chaque refresh prend entre 750 et 1000 ms, en moyenne 800, donc chaque bot coûte 0.8ms de refresh à ce stade (ce n’est que le cas des bots pour prévoir leurs futurs comportement, un joueur normal ne prend pas du tout ce temps là même si ça doit lagger).
+-test avec 1000 loutres simulant des non-bots : environ 200ms de refresh, sauf que c’est pas vraiment représentatif. On suppose environ 400ms de refresh pour des persos normaux, donc 0.4ms de refresh/perso ce qui veut dire que l’algorithme de bot coûte 0.4ms par utilisation. Plutot bien je crois
+
+alpha 1.1995:
+-Réorganisation de la fonction load_and_play(), qui à présent initialise juste le parcours à suivre pour charger la partie, le chargement en lui même se faisant dans refresh() à présent, ce qui permet que le programme ne soit pas muet pendant le chargement.
+-ATTENTION : comme on a supprimé notamment enter_land() et start_playing(), (inutiles à présent vu que le chargement se fait directement via refresh()), les fonctions create_and_play() and quickplay() ne FONCTIONNENT PAS
+-mise en place d’une barre de chargement pour suivre l’état de chargement de la partie, à améliorer, notamment quant aux pourcentages lors de la création de sprites
+-observation d’un bug : un Label ne possède pas de self.visible, il est donc impossible de le rendre invisible après l’avoir créé. Pour remedier à ça il faudrait créer notre propre Label, qui stockerait sa variable .text lorsqu’on souhaite le rendre invisible (on le rendrait invisible en mettant self.text = ‘’, c pour ça qu’il faut stocker text qq part)
+
+alpha 1.1999:
+-problème de la non disparition des labels résolue : il suffit de leur mettre une .color avec un alpha de 0, à voir avec les labels qu’on veut avec un alpha entre 1 et 254 ça risque de poser problème mais bon on verra ta capté
+
+alpha 1.2006:
+-suppression des fonctions load_and_play(), create_and_play() et quickplay(), tout se déroule maintenant dans la seule et unique all_in_one() que je vais surement renommer pcq c’est un prénom éclaté. La création de terrains et quickplay marche donc cependant la création de terrain se fait en une seule fonction dans la première phase de loading, donc le programme reste muet lors de la creation de terrain
+-possibilité de quitter le programme lors d’un chargement de partie en appuyant sur esc
+
+alpha 1.2045:
+-amélioration de l’algorithme, mise en place de l’action ‘creating’ afin d’avoir une section dédiée à la création de terrain. Séparation de la création d’un terrain en 10 phases spécifiques.
+-la barre de chargement se remplit en fonction du nombres d’actions restantes, donc la barre augmente lors de la création de sprites par exemple
+-appuyer sur esc pendant un chargement (que ce soit ‘creating’ ou ‘loading’) renvoie au menu principal au lieu de quitter le programme
+-COMPTE RENDU : le programme reste encore muet lors des phases ‘creating noise’, ‘coloring terrain’ et ‘placing asset’, car j’ai pas reussi (eu la flemme) de séparer ces fonctions en plus petits bouts, à voir pour une upgrade
+
+alpha 1.2059:
+-petites corrections/amélioration de l’algorithme de creation/loading, mise en évidence du nombre de bots à créer pour faciliter sa modification
+
+alpha 1.2079:
+-ajout des parties de code que j’avais déjà écrites sur l’autre ordi afin de pouvoir “swap” des items dans l’inventaire. Cette version est donc la plus à jour sur tous les ordis, et l’ancienne version (la 1e à avoir eu le swap) dégage correctement.
+-COMPTE RENDU : on a testé la vitesse de création/loading entre le code à jour et l’ancien, on observe ces résultats pour la creation/loading d’une map 20*20 (en sec):
+	*ancien code:
+		creation: 91.518
+		loading: 41.989
+	*nouvo code:
+		creation: 94.731
+		loading: 41.694
+Perte de temps dû aux modif des fonctions et surtout lors du noise ?
+Afin de valider ces prédictions il faudrait faire plus d’essais sur de nombreuses créations de monde mais flemme pr le moment, un jour je créé un outil pr ça.
+
+alpha 1.2100:
+-BESOIN DE GETBACK3 à partir de là pour recup les saves car on a créé un format .savd tel que getback ( version >= 3) les repère automatiquement.
+-correction bug mineur quand il n’y a pas de maps
+-correction bug mineur : juste après avoir cliqué sur un bouton on recheck si un autre est sélectionné
+
