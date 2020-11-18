@@ -2,8 +2,6 @@
 
 
 
-
-
 import random,os,ctypes,time
 from ctypes import windll, Structure, c_long, byref
 from math import *

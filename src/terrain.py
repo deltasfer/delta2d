@@ -4,10 +4,8 @@
 
 
 
-
-
 import pyglet,random
-from src import utils
+import src.utils as utils
 import src.tile_utils as tut
 import src.TerrainCreator as ter
 
@@ -106,9 +104,3 @@ def emptyBiom(biom):
     tab = [[x]*biom[1]]
     eB = Biom(tab*tut.DEPTH_BIOM)
     return eB
-
-
-
-
-
-

@@ -2,8 +2,6 @@
 
 
 
-
-
 dic = {} ## dic regroupant des caractéristiques de chaque espèce (skin seq etc) afin que ça soa pratik qoa
 
 
@@ -15,10 +13,10 @@ if True:
     names = ['Louli','Croquette','Luisante','Marcel','Mamadou','Poisson','Lebleu','Rosetou','Cracante'
         ,'Dodue','Mimi','Moumou','Toumoumou','Limonade','Mimosa','Merlin','Timon','Timéo','Juice','Grenadine','Melon','Legend','IM THE LOUTRE MASTER']
 
-    skin = { 'up':17,
-        'right':20,
-        'down':23,
-        'left':26}
+    skin = { 'up':[17,17,17],
+        'right':[20,20,20],
+        'down':[23,23,23],
+        'left':[26,26,26]}
 
     skills = ['none','normal','walking','swimming']
 
@@ -54,10 +52,10 @@ if True:
     ,'Gabrielle','Lya','Yasmine','Maëlys','Assia','Apolline','Élise','Alix','Emy','Lise','Elsa','Lily','Lyana','Lisa','Noémie','Marie','Roxane','Lyna','Héloïse','Candice','Valentine'
     ,'Zélie','Maya','Soline','Maria','Célia','Maëlle','Emmy','Éléna','Faustine','Salomé','Lila','Louane','Alya','Thaïs','Constance','Laura','Mélina','Livia','Amelia','Océane','Sara']
 
-    skin = { 'up':1,
-        'right':4,
-        'down':7,
-        'left':10}
+    skin = { 'up':[1,2,3],
+        'right':[4,5,6],
+        'down':[7,8,9],
+        'left':[10,11,12]}
 
     skills = ['none','normal','walking']
 
@@ -70,9 +68,3 @@ if True:
             }
 
 dic['human'] = dic2
-
-
-
-
-
-

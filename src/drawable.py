@@ -4,8 +4,6 @@
 
 
 
-
-
 import pyglet
 
 class SprButton(pyglet.text.Label):
@@ -129,6 +127,3 @@ class WritingBar(pyglet.text.Label):
         self.color = self.initial_color
         self.validated = False
         self.selected = False
-
-
-

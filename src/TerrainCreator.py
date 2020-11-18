@@ -3,11 +3,9 @@
 
 
 
-
-
 import os
 import random
-from src import utils
+import src.utils as utils
 import src.tile_utils as tut
 import noise as ns
 import perlin.perlin as p
@@ -837,9 +835,3 @@ def aff(ter):
                 b+=' '"""
             to_p+=(x)
         print(to_p)
-
-
-
-
-
-

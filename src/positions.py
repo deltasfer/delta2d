@@ -1,8 +1,6 @@
 
 
-
-
-from src import tile_utils as tut
+import src.tile_utils as tut
 
 """
 tout d'abord on défini les positions/sizes relatives, ne
@@ -95,9 +93,3 @@ def set_size_screen(size):
     if size != SIZE_SCREEN:
         SIZE_SCREEN = size
         GEN,BOX,POS,SIZ = update()
-
-
-
-
-
-

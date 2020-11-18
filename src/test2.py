@@ -4,8 +4,6 @@
 
 
 
-
-
 import pyglet,graphic,utils,terrain,test2,perso,drawable
 import time,os
 from TerrainCreator import *
@@ -146,9 +144,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
 
 
 

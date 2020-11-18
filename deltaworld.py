@@ -1,7 +1,5 @@
 
 
-
-
 #newversion
 
 
@@ -9,14 +7,17 @@
 import pyglet
 import PIL as pil
 import time,os,json,random
-from src.TerrainCreator import *
 from pyglet.window import key
-from src import graphic,terrain,perso,drawable
+
+from src.TerrainCreator import *
 from src.utils import *
-from src import tile_utils as tut
-from src import positions as pup
-from src import perso as pso
-from src import getsave as gs
+import src.graphic as graphic
+import src.terrain as terrain
+import src.drawable as drawable
+import src.tile_utils as tut
+import src.positions as pup
+import src.perso as pso
+import src.getsave as gs
 
 
 CURRENT_PATH = os.path.dirname(os.path.abspath(__file__)) # fopatouché
@@ -183,7 +184,11 @@ class App(pyglet.window.Window):
                         ,key.QUOTELEFT : '<',key.A : 'a',key.B : 'b',key.C : 'c',key.D : 'd',key.E : 'e',key.F : 'f',key.G : 'g',key.H : 'h',key.I : 'i'
                         ,key.J : 'j',key.K : 'k',key.L : 'l',key.M : 'm',key.N : 'n',key.O : 'o',key.P : 'p',key.Q : 'q',key.R : 'r',key.S : 's'
                         ,key.T : 't',key.U : 'u',key.V : 'v',key.W : 'w',key.X : 'x',key.Y : 'y',key.Z : 'z',key.BRACELEFT : '{',key.BAR : '|'
-                        ,key.BRACERIGHT : '}',key.ASCIITILDE : '*'}
+                        ,key.BRACERIGHT : '}',key.ASCIITILDE : '*'
+                        ,key.NUM_0 : '0',key.NUM_1 : '1',key.NUM_2 : '2',key.NUM_3 : '3',key.NUM_4 : '4',key.NUM_5 : '5',key.NUM_6 : '6'
+                        ,key.NUM_7 : '7',key.NUM_8 : '8',key.NUM_9 : '9',
+
+                        }
 
         # actions
         self.playing = True
@@ -788,7 +793,7 @@ class App(pyglet.window.Window):
                 dic['type'] = 'Living'
 
             dic['specie'] = self.persos[perso].specie
-            dic['skin_seq'] = self.persos[perso].skin_seq
+            dic['skin_dic'] = self.persos[perso].skin_dic
 
             if perso == self.perso:
                 dic['inventory'] = self.persos[perso].get_inv()
@@ -1367,8 +1372,8 @@ class App(pyglet.window.Window):
     def on_mouse_motion(self,x,y,dx,dy):
 
         self.clicks['M'] = [x,y]
-        self.mouse_speed = utils.module(dx,dy)
-        #print(utils.module(dx,dy))
+        self.mouse_speed = module(dx,dy)
+        #print(module(dx,dy))
 
         if self.actions[self.action] == 'menu':
 
@@ -1417,11 +1422,6 @@ class App(pyglet.window.Window):
 
             oldskin = self.persos[self.perso].skin
             self.persos[self.perso].update_skin(pos)
-            if self.persos[self.perso].skin != oldskin:
-                try :
-                    self.graphic.sprites[self.sprids['persos'][self.perso]].image = self.manager.textures[self.textids['persos'][self.persos[self.perso].skin]]
-                except:
-                    a=0
 
             #print('bouging')
 
@@ -1452,11 +1452,6 @@ class App(pyglet.window.Window):
 
             oldskin = self.persos[self.perso].skin
             self.persos[self.perso].update_skin(pos)
-            if self.persos[self.perso].skin != oldskin:
-                try :
-                    self.graphic.sprites[self.sprids['persos'][self.perso]].image = self.manager.textures[self.textids['persos'][self.persos[self.perso].skin]]
-                except:
-                    a=0
 
         if buttons == pyglet.window.mouse.RIGHT :
             self.clicks['R'] = [x,y]
@@ -2229,7 +2224,7 @@ class App(pyglet.window.Window):
                 dic['pos'] = [tut.SIZE_TERRAIN[0]//2,tut.SIZE_TERRAIN[1]//2,1,1,0,0,1]
                 dic['type'] = 'Perso'
                 dic['specie'] = 'human'
-                dic['skin_seq'] = None
+                dic['skin_dic'] = None
                 dic['inventory'] = {}
                 dic['main'] = True
                 dic['id'] = get_id('perso')
@@ -2267,7 +2262,7 @@ class App(pyglet.window.Window):
                     dic['pos'] = None
                     dic['type'] = 'Living'
                     dic['specie'] = 'loutre'
-                    dic['skin_seq'] = None
+                    dic['skin_dic'] = None
                     dic['main'] = False
                     dic['id'] = get_id('perso')
 
@@ -2410,14 +2405,14 @@ class App(pyglet.window.Window):
                     if dic['type'] == 'Perso':
 
                         self.persos[dic['id']] = pso.Perso(self.textids['ground'],self.textids['number'],self.graphic, self.terrain \
-                                                            ,self.cmd,persobox,specie=dic['specie'],name=dic['name'],skin_seq=dic['skin_seq'])
+                                                            ,self.cmd,persobox,specie=dic['specie'],name=dic['name'],skin_seq=dic['skin_dic'])
 
                         self.selector = [0,[0,0],0]
                         self.persos[self.perso].set_inv(dic['inventory'])
 
                     elif dic['type'] == 'Living':
 
-                        self.persos[dic['id']] = pso.LivingBot( self.terrain,self.cmd,persobox,specie=dic['specie'],name=dic['name'],skin_seq=dic['skin_seq'])
+                        self.persos[dic['id']] = pso.LivingBot( self.terrain,self.cmd,persobox,specie=dic['specie'],name=dic['name'],skin_seq=dic['skin_dic'])
 
                     if dic['life'] != None:
                         self.persos[dic['id']].life,self.persos[dic['id']].max_life = dic['life']
@@ -2518,10 +2513,10 @@ class App(pyglet.window.Window):
                 self.aff_hud = True
                 self.navigate('showing')
                 if hasattr(self, 'created'):
-                    print('TOTAL TIME CREATING/LOADING GAME :',utils.truncate(time.time()-self.total_time_loading,3))
+                    print('TOTAL TIME CREATING/LOADING GAME :',truncate(time.time()-self.total_time_loading,3))
                     del self.created
                 else:
-                    print('TOTAL TIME LOADING GAME :',utils.truncate(time.time()-self.total_time_loading,3))
+                    print('TOTAL TIME LOADING GAME :',truncate(time.time()-self.total_time_loading,3))
 
                 if TAKE_DIRECT_SCREEN:
                     self.create_image()
@@ -2529,7 +2524,7 @@ class App(pyglet.window.Window):
                 go_on = True
                 add_per = True
 
-            #print('     state',state,utils.truncate(time.time()-local_time,3))
+            #print('     state',state,truncate(time.time()-local_time,3))
 
             # upgrading state
             if add_per:
@@ -2653,6 +2648,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-

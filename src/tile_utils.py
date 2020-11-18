@@ -4,8 +4,6 @@
 
 
 
-
-
 import math
 
 ## definitions de fonctions et classes utiles pour le tilemapping
@@ -481,9 +479,6 @@ def colli_ABP_mult(boxes,pt):
         return None # retourne un ouai bah t'es dans rien mon pote
 
     return goody[0]
-
-
-
 
 
 

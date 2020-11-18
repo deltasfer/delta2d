@@ -1,5 +1,3 @@
-
-
 """""
 programme sauvegarde de fichiers sources
 """""
@@ -55,6 +53,3 @@ def get_version(bigpath,save_path = '/autosav/'):
     except:
         a=0
     return version[0]+'_'+str(version[1])[0]+'_'+str(version[1])[-4:]
-
-
-

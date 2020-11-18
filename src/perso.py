@@ -3,15 +3,13 @@
 
 
 
-
-
-import random
-from src import tile_utils as tut
-from src import positions as pup
-from src import species as sp
+import random,time
+import src.tile_utils as tut
+import src.positions as pup
+import src.species as sp
 from src.utils import *
 import src.item as item
-from src import TerrainCreator as tc
+import src.TerrainCreator as tc
 
 
 CMD = False
@@ -55,10 +53,14 @@ class Living():
         self.dirs = {(0,1):'up',(0,-1):'down',(1,0):'right',(-1,0):'left'}
 
         if skin_seq == None:
-            self.skin_seq = sp.dic[self.specie]['skin_seq']
+            self.skin_dic = sp.dic[self.specie]['skin_seq']
         else:
-            self.skin_seq = skin_seq
-        self.skin = self.skin_seq['down']
+            self.skin_dic = skin_seq
+        self.skin_seq = 'down'
+        self.skin_var = 0
+        self.skin_time = time.time()
+        self.skin_changing_time = 0.1
+        self.skin = self.skin_dic['down'][0]
 
         self.plusposskin = [32,33]
         self.show_line = False
@@ -233,6 +235,17 @@ class Living():
         self.box = tut.BCX_Box(*self.pos.bcx(),self.pos.lvl(),*self.size.bcx())
         #self.labman.add('FCKKYE',choice([0,1]))
 
+    def actualise_skin(self):
+
+
+        if self.skin_var >= len(self.skin_dic[self.skin_seq]):
+            self.skin_var = 1
+        elif self.skin_var < 0:
+            self.skin_var = len(self.skin_dic[self.skin_seq])-1
+
+        if self.skin != self.skin_dic[self.skin_seq][self.skin_var]:
+            self.skin = self.skin_dic[self.skin_seq][self.skin_var]
+
     def move(self,dir,speedup=False,admin=False):
 
         if CMD:
@@ -247,9 +260,15 @@ class Living():
         vec_depl = tut.XY_Vec(dir[0]*speed,dir[1]*speed)
 
         if not self.dead:
-            self.skin = self.skin_seq[self.dirs[(dir[0],dir[1])]]
+            self.skin_seq = self.dirs[(dir[0],dir[1])]
+            t = time.time()
+            if t-self.skin_time >= self.skin_changing_time:
+                self.skin_var+=1
+                self.skin_time = t
+
             if self.name == 'Legend':
                 self.labman.add('skin Legend set to :',self.dirs[(dir[0],dir[1])])
+            self.actualise_skin()
 
         moving = False
 
@@ -401,9 +420,9 @@ class Perso(Living):
                 else:
                     return False
 
-    def update_skin(self,pos):
+    def update_skin(self,mouse_pos):
         if not self.dead:
-            x,y = tut.xy_add(pos,tut.from_bcx_to_xy(self.pos),-1).xy()
+            x,y = tut.xy_add(mouse_pos,tut.from_bcx_to_xy(self.pos),-1).xy()
             if y == 0:
                 y=1
             #self.labman.add('vec moved mouse',vec)
@@ -412,14 +431,15 @@ class Perso(Living):
 
             if dif >=1:
                 if x >= 0:
-                    self.skin = self.skin_seq['right']
+                    self.skin_seq = 'right'
                 else:
-                    self.skin = self.skin_seq['left']
+                    self.skin_seq = 'left'
             else:
                 if y >= 0:
-                    self.skin = self.skin_seq['up']
+                    self.skin_seq = 'up'
                 else:
-                    self.skin = self.skin_seq['down']
+                    self.skin_seq = 'down'
+            self.actualise_skin()
 
     def in_inv_grab(self):
         if self.inv_selection != []:
@@ -764,6 +784,3 @@ class LivingBot(Living):
                     self.move(dir)
 
         #self.labman.add(self.name+' acting : ',self.current_action)
-
-
-

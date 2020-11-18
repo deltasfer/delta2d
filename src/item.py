@@ -1,8 +1,6 @@
 
 
-
-
-from src import tile_utils as tut
+import src.tile_utils as tut
 from src.utils import *
 from src.TerrainCreator import REVERSE_DIC
 
@@ -27,7 +25,7 @@ class Item():
     def del_sprid(self):
         self.sprid = ''
         self.has_sprid = False
-        
+
     def act(self,case):
 
         #print(self.name,'acting on the',case,'case')
@@ -113,6 +111,3 @@ class Stackable(Item):
 
         super(Stackable,self).del_sprid()
         self.sprid_amount = ''
-
-
-
